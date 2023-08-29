@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { usePersonel } from '../../context/PersonelContext';
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -15,7 +16,8 @@ function createData(name, calories, fat, carbs, protein) {
 
 export default function BasicTable(props) {
 const  {gorevler,images}=props;
-
+const {personeller}=usePersonel();
+console.log(gorevler);
   return (
     <TableContainer component={Paper}sx={{marginBottom:5}}>
       <Table sx={{ maxWidth: 650 }} aria-label="simple table">
@@ -30,11 +32,11 @@ const  {gorevler,images}=props;
         <TableBody>
           {gorevler.map((row,index) => (
             <TableRow
-              key={row.name}
+              key={index}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                <img src={images[index]} width={20}/>
+                <img src={personeller[row.sorumlu -1].image} width={20}/>
               </TableCell>
               <TableCell align="right">{row.icerik}</TableCell>
               <TableCell align="right">{row.sonTarih}</TableCell>

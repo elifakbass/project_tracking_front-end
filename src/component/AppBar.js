@@ -29,7 +29,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import BugReportIcon from '@mui/icons-material/BugReport';
-
+import GelenKutusu from './GelenKutusu'
 
 const drawerWidth = 240;
 
@@ -236,9 +236,7 @@ export default function MiniDrawer() {
               </Button>
             </Box>
           <Box sx={{marginRight:1,display:'flex',alignItems:'center'}} >
-            <IconButton sx={{alignItems:'end',alignItems:'end'} }>
-              <EmailIcon sx={{color:'#808080'}}/>
-            </IconButton>
+              <GelenKutusu/>
           </Box>
           <Box sx={{marginRight:1}}>
             <IconButton>
@@ -315,7 +313,7 @@ export default function MiniDrawer() {
           
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3,backgroundColor:'#b6b6b6',height:'100vh'}}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3,backgroundColor:'#e6e6e6',height:'100vh'}}>
         <DrawerHeader />
         <Outlet/>
       </Box>

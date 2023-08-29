@@ -9,34 +9,52 @@ import Typography from '@mui/material/Typography';
 import { usePersonel } from '../../context/PersonelContext';
 import { getYorumlarByProjeId } from '../../api';
 
-let yorums=[];
 export default function AlignItemsList(props) {
-    const {projeId,yorumlar}=props;
+  const { projeId } = props;
+  const [yorum, setYorum] = React.useState([]);
+  const [showPrevious, setShowPrevious] = React.useState(false);
+  const [startIndex, setStartIndex] = React.useState(0);
 
-    const {personeller,guncel}=usePersonel();
-yorums=yorumlar;
-   React.useEffect(()=>{
-    if(guncel==="yorum"){
-        const getYorumlar =  () =>{
-            getYorumlarByProjeId(projeId).then((res)=>{
-             yorums=res
-           })
-       
-         }
-         getYorumlar();
+  const { personeller, guncel } = usePersonel();
+
+  React.useEffect(() => {
+    const getYorumlar = () => {
+      getYorumlarByProjeId(projeId).then((res) => {
+        setYorum(res);
+      });
+    };
+    getYorumlar();
+  }, [guncel]);
+console.log(projeId);
+  React.useEffect(() => {
+    const getYorumlar = () => {
+      getYorumlarByProjeId(projeId).then((res) => {
+        setYorum(res);
+      });
+    };
+    getYorumlar();
+  }, []);
+
+  const visibleYorumlar = showPrevious
+    ? yorum.slice(Math.max(startIndex - 3, 0), startIndex)
+    : yorum.slice(Math.max(yorum.length - 3, 0));
+
+  const toggleShowPrevious = () => {
+    setShowPrevious((prev) => !prev);
+    if (!showPrevious) {
+      setStartIndex(Math.max(yorum.length - 3, 0));
     }
+  };
 
-   },[guncel])
-      
   return (
     <List sx={{ width: '100%', minWidth: 360, bgcolor: 'background.paper' }}>
-      {yorums.map((yorum,index) => (
+      {visibleYorumlar.map((yorum, index) => (
         <ListItem alignItems="flex-start" key={index}>
           <ListItemAvatar>
-            <img src={personeller[yorum.personel_id -1].image }  width={40}/>
+            <img src={personeller[yorum.personel_id - 1].image} width={40} />
           </ListItemAvatar>
           <ListItemText
-            primary={personeller[yorum.personel_id -1].name}
+            primary={personeller[yorum.personel_id - 1].name}
             secondary={
               <React.Fragment>
                 <Typography
@@ -52,6 +70,18 @@ yorums=yorumlar;
           />
         </ListItem>
       ))}
+      {!showPrevious && yorum.length > 3 && (
+        <ListItem alignItems="center" sx={{ justifyContent: 'center' }}>
+          <Typography
+            color="primary"
+            variant="body2"
+            sx={{ cursor: 'pointer' }}
+            onClick={toggleShowPrevious}
+          >
+            Daha önceki yorumları göster
+          </Typography>
+        </ListItem>
+      )}
     </List>
   );
 }

@@ -1,10 +1,24 @@
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import React from 'react'
+import Takvim from '../../component/Scheduler'
 
 function Home() {
   return (
     <>
-    <Box sx={{marginRight:100,marginTop:5,width:50,height:50,backgroundColor:'pink'}}>Home</Box>
+    <div style={{display:'flex',marginTop:30}}>
+
+      <Typography variant='body2' sx={{marginLeft:5,marginRight:1}} >Başlamadı</Typography>
+      <div style={{width:90,height:20,backgroundColor:'#FF9933'}}> </div>
+
+      
+      <Typography variant='body2' sx={{marginLeft:5,marginRight:1}} >Devam Etmekte</Typography>
+      <div style={{width:90,height:20,backgroundColor:'#8569D4'}}> </div>
+
+      <Typography variant='body2' sx={{marginLeft:5,marginRight:1}} >Tamamlandı</Typography>
+      <div style={{width:90,height:20,backgroundColor:'#3FB460'}}> </div>
+
+    </div>
+    <Takvim/>
     
     </>
   )

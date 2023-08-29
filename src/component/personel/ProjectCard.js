@@ -14,6 +14,8 @@ import Durum from './Select'
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { colors } from '@mui/material';
+import { getGorevlerByProjeId, getYorumlarByProjeId } from '../../api';
+import Modal from '../personel/Modal';
 
 const bull = (
   <Box
@@ -28,8 +30,55 @@ export default function BasicCard(props) {
 
   const {proje,index} =props;
   console.log(index);
-  const {kullanici,personeller,projeGorev}=usePersonel();
+  const {kullanici,personeller}=usePersonel();
+  const [personelImage,setPersonelImage]=React.useState([]);
+  const [yorumlar,setYorumlar]=React.useState([]);
+  const [projeGorev,setProjeGorev]=React.useState([]);
+  const [allImages,setAllImages]=React.useState([]);
+
+  React.useEffect(()=>{
+    const getGorevlerProjeId = async () =>{
+        await getGorevlerByProjeId(proje.id).then((gorev)=>{
+          console.log(gorev);
+            setProjeGorev(gorev);
+        });
+    }
+    getGorevlerProjeId();
+
+
+    const getYorumlar =  () =>{
+      getYorumlarByProjeId(proje.id).then((res)=>{
+       setYorumlar(res);
+     })
+ 
+   }
+   getYorumlar();
+
+   
+  },[]);
+
+  console.log(projeGorev);
+  React.useEffect(()=>{
+    const getUniquePersonelImages = () => {
+      const uniqueImages = new Set();
+      
+      projeGorev.forEach((gorev) => {
+        const personel = personeller.find((personel) => personel.id === gorev.sorumlu);
+        if (personel) {
+          uniqueImages.add(personel.image);
+          setAllImages((current)=>[...current,personel.image]);
+        }
+      });
   
+      setPersonelImage([...uniqueImages]);
+    };
+  
+    getUniquePersonelImages();
+
+  },[projeGorev])
+
+
+  console.log(projeGorev);
  
   return (
     <Card sx={{ minWidth: 275 ,marginRight:10,maxHeight:520}}>
@@ -72,21 +121,23 @@ export default function BasicCard(props) {
               marginLeft: '25px',
             }}
           >
-            {projeGorev[index] && projeGorev[index].length > 0 ? (
-              projeGorev[index].map((g, gIndex) => (
+            {personelImage && personelImage.length > 0 ? (
+              personelImage.map((g, gIndex) => (
+
                 <img
                   key={gIndex}
-                  src={personeller[g.sorumlu - 1].image}
+                  src={g}
                   width={30}
-                  alt={`Çalışan ${g.sorumlu}`}
                   style={{ marginLeft:'10px'}}
                 />
+
               ))
             ) : (
               <Typography variant="body2" sx={{ color: '#ccc' }}>
                 Çalışan Yok
               </Typography>
             )}
+
           </span>
           </div>
           <div style={{display:'flex',marginTop:30}}>
@@ -103,7 +154,7 @@ export default function BasicCard(props) {
           </div>
       </CardContent>
 
-        <Button sx={{backgroundColor:'#a366ff', color:'#fff',marginLeft:10,marginTop:2}}>Detayları Gör</Button>
+      <Modal gorevler={projeGorev} projeId={proje.id} proje={proje} images={personelImage} yorumlar={yorumlar}/>
 
     </Card>
   );

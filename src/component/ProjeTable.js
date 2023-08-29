@@ -18,6 +18,7 @@ import { useYonetici } from '../context/YoneticiContext';
 import { deleteGorev, deleteProje, getGorevlerByProjeId, updateGorev, updateProje } from '../api';
 import CloseIcon from '@mui/icons-material/Close';
 import { Button } from '@mui/material';
+import SilmeModal from './ModalSilme';
 
 import ModalGorev from '../component/ModalGorev';
 
@@ -101,17 +102,9 @@ function GorevRow(props){
 
   }
 
-  const handleDelete2 =async (id)=>{ 
-    setPost("");
-    await deleteGorev(id);
-    setPost("proje");
-  }
 
 return (
   <TableRow  sx={{maxHeight:80}}>
-                      <TableCell>
-                        <button onClick={() => handleDelete2(row.id)} style={{backgroundColor:'#fff',border:'1px solid #ccc',cursor:'pointer'}} > <CloseIcon htmlColor='#e60000'/> </button> 
-                      </TableCell>
 
                       <TableCell component="th" scope="row" onClick={() => enterEditMode2(row.id)}>
                       {editMode2 === row.id ? (
@@ -176,6 +169,10 @@ return (
                       <TableCell align="center" >
                         <Durum value={row.durum} entity={"gorev"} row={row}/>
                       </TableCell>
+
+                      <TableCell align='right'>
+                        <SilmeModal entity={"gorev"} id={row.id}/>
+                      </TableCell>
                     </TableRow>
 
 )
@@ -218,20 +215,10 @@ function Row(props) {
   };
 
 
-  const handleDelete = async (id) =>{
-    setPost("");
-    await deleteProje(id);
-    setPost("proje");
-
-  }
-
 
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset'},maxHeight:80 }}>
-        <TableCell>
-           <button onClick={() => handleDelete(row.id)} style={{backgroundColor:'#fff',border:'1px solid #ccc',cursor:'pointer'}} > <CloseIcon htmlColor='#e60000'/> </button> 
-         </TableCell>
         <TableCell>
           <IconButton
             aria-label="expand row"
@@ -301,7 +288,7 @@ function Row(props) {
         }
         </TableCell>
         <TableCell align="center" ><Durum id={row.id} row={row} value={row.durum} entity={"proje"}/></TableCell>
-        <TableCell align='right' onClick={() => enterEditMode(row.id)}>
+        <TableCell align='center' onClick={() => enterEditMode(row.id)}>
         {editMode === row.id ? (
         <input
         style={{
@@ -330,6 +317,8 @@ function Row(props) {
           icerik
         }
         </TableCell>
+        <TableCell align='right'>
+        <SilmeModal entity={"proje"} id={row.id}/> </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 ,backgroundColor:"#e6e6e6"}} colSpan={8}>
@@ -338,11 +327,11 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell/>
                     <TableCell>Gorev</TableCell>
                     <TableCell align="right">Sorumlu</TableCell>
                     <TableCell align="right">Son Tarih</TableCell>
                     <TableCell align="center">Durum</TableCell>
+                    <TableCell/>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -400,7 +389,7 @@ export default function ProjeTable(props) {
     if(proje.length>0){
       proje.map(async(p,index)=>{
         console.log(p);
-        if(p.length>1){
+       
           p.map(async(project)=>{
             const gorevler= await getGorevlerByProjeId(project.id);
             console.log(gorevler);
@@ -408,14 +397,7 @@ export default function ProjeTable(props) {
             setRows((current) => [...current,row]);
 
           })
-        }
-        else{
-
-            const gorevler= await getGorevlerByProjeId(p[index].id);
-            console.log(gorevler);
-            const row=createData(p[index],personel[index].image,gorevler,personel);
-            setRows((current) => [...current,row]);
-        }
+        
 
       })
     }
@@ -429,7 +411,7 @@ export default function ProjeTable(props) {
     }
     else{
       const filtered = rows.filter((row) => {
-        return row.name === props.parametre;
+        return row.name.toLowerCase().startsWith(props.parametre.toLowerCase());
       });
       setVeriler(filtered);
     }
@@ -441,13 +423,13 @@ export default function ProjeTable(props) {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell/>
             <TableCell />
             <TableCell>Proje</TableCell>
             <TableCell align="right">Sorumlu</TableCell>
             <TableCell align="right">Son Tarih</TableCell>
             <TableCell align="center">Durum</TableCell>
-            <TableCell align="right">İçerik</TableCell>
+            <TableCell align="center">İçerik</TableCell>
+            <TableCell align='right'/>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -31,7 +31,6 @@ const style = {
   p: 4,
   borderRadius:5
 };
-
 export default function BasicModal(props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -41,8 +40,7 @@ export default function BasicModal(props) {
   const [sonTarih,setSonTarih]=React.useState("");
   const [icerik,setIcerik]=React.useState("");
   const [sorumlu,setSorumlu]=React.useState();
-  const [yorum,setYorum]=React.useState();
-
+  const [yorum,setYorum]=React.useState("");
 
 const {personeller,setGuncel} =usePersonel();
 const {gorevler,projeId,proje,images,yorumlar}=props;
@@ -52,7 +50,6 @@ const {gorevler,projeId,proje,images,yorumlar}=props;
 
   }
 
-
 const handleSubmit =async ()=>{
   let personel_id=parseInt(localStorage.getItem("user-id"));
   const request={
@@ -61,13 +58,10 @@ const handleSubmit =async ()=>{
     "icerik":yorum
   }
   await saveYorum(request);
-  setGuncel("yorum");
-  handleClose();
-
+  setYorum("");
+setGuncel(true);
   
 }
-
-
 
 if(proje===undefined){
   return(
@@ -145,6 +139,7 @@ if(proje===undefined){
             <TextField fullWidth label="Bir Yorum Ekleyin" id="fullWidth"
               color='secondary'
               onChange={(e) => setYorum(e.target.value)}
+              value={yorum}
             />
             <button onClick={handleSubmit} style={{marginLeft:5,color:'#400080',width:'120px',backgroundColor:'#bf80ff',border:'1px solid #400080',cursor:'pointer',borderRadius:5}}>Gönder</button>
           </Box>

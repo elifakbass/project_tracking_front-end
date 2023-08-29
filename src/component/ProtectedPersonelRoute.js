@@ -7,7 +7,7 @@ const {user,role,setRole}=useAuth();
 console.log(role)
 localStorage.setItem("role",role);
 
-  if(!localStorage.getItem("user-email") || !parseInt(localStorage.getItem("role"))==1){
+  if(!localStorage.getItem("user-email") || !parseInt(localStorage.getItem("role"))===1){
     setRole(false);
     return <Navigate to="/auth/login" />
   }

@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AuthProvider, { useAuth } from './context/AuthContext';
 import YoneticiProvider from './context/YoneticiContext';
 import PersonelProvider from './context/PersonelContext';
+import AdminProvider from './context/AdminContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const role=parseInt(localStorage.getItem("role"));
@@ -26,6 +27,11 @@ root.render(
                   <App/>
             </PersonelProvider>)
 
+            :
+            role === 3 ?
+            <AdminProvider>
+                  <App/>
+            </AdminProvider>          
             :(
 
                   <App/>

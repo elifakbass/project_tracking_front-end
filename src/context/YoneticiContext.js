@@ -55,21 +55,27 @@ const YoneticiProvider = ({children}) =>{
                     const res = await getProjelerByPersonelId(p.id);
                     return res;
                 })).then((projeler) => {
-                    setProje(projeler);
+                    if(projeler !== undefined){
+                        const projects=projeler.filter(projeler => projeler.length > 0);
+                        setProje(projects);
+                    }
+                    
                 });
             }
       
     },[personel])
+    console.log(proje);
 
     useEffect(()=>{
         if(proje.length>0){
             let i=0;
             Promise.all(proje.map( async (p) =>{
-
-                    const res = await getGorevlerByProjeId(p[i].id);
-         
+                    if(p !== undefined){
+                        const res = await getGorevlerByProjeId(p[i].id);
                         i++;
                         return res;
+                    }  
+                     
      
             })).then((gorevler) =>{
                 
@@ -91,11 +97,24 @@ const YoneticiProvider = ({children}) =>{
                     const res = await getProjelerByPersonelId(p.id);
                     return res;
                 })).then((projeler) => {
-                    setProje(projeler);
+                    const projects=projeler.filter(projeler => projeler.length > 0)
+                    setProje(projects);
                 });
             }
 
         }
+        else if(post === "personel"){
+            setPersonel([]);
+            const getPersonel = async () =>{
+                const tempId=parseInt(localStorage.getItem("user-id"));
+                    await getPersoneller(tempId).then((res)=>{
+                        setPersonel(res);
+                    }); 
+            }
+            getPersonel();
+
+        }
+        setPost("false");
 
     },[post])
 

@@ -6,7 +6,9 @@ import GorevCard from '../../component/personel/GorevCard';
 
 function Home() {
 
-  const {projeler,kullanici,gorevler}=usePersonel();
+    const {projeler,kullanici,gorevler}=usePersonel();
+  
+  
   const [projects,setProjects]=useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,6 +52,7 @@ function Home() {
     
   )
   }
+
 
 
 export default Home

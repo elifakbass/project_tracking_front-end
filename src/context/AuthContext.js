@@ -9,7 +9,7 @@ const AuthProvider = ({children}) =>{
     const [password,setPassword]=useState(localStorage.getItem("password") || false );
     const [role,setRole]=useState(localStorage.getItem("role") || false);
 
-    localStorage.setItem("role",role);
+
     useEffect(()=>{
         localStorage.setItem("role", role);
         localStorage.setItem("user-email", user);

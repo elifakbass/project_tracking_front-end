@@ -6,7 +6,7 @@ function ProtectedYoneticiRoute({children}) {
 const {user,role}=useAuth();
 console.log(role)
 localStorage.setItem("role",role);
-  if(!localStorage.getItem("user-email") || !parseInt(localStorage.getItem("role"))==2){
+  if(!localStorage.getItem("user-email") || !parseInt(localStorage.getItem("role"))===2){
     return <Navigate to="/auth/login" />
   }
   return children;

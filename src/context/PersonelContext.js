@@ -16,7 +16,7 @@ const PersonelProvider = ({ children }) => {
 
   const [yoneticiId,setYoneticiId]=useState(null);
   const [personeller,setPersoneller]=useState([]);
-  const [guncel,setGuncel]=useState("");
+  const [guncel,setGuncel]=useState(false);
   const [projeId,setProjeId]=useState();
 
   const { user, password } = useAuth();
@@ -25,14 +25,23 @@ const PersonelProvider = ({ children }) => {
   useEffect(() => {
     const fetchData = async () => {
       if(!(localStorage.getItem("user-email") === "false") || parseInt(localStorage.getItem("role"))===1){
-
+        let temid=null;
          await findPersonel(user, password).then((res)=>{
+          temid=res.id;
           setKullanici(res);
           localStorage.setItem('user-id', res.id);
           setId(res.id);
-          setYoneticiId(res.sorumlu)
-          console.log(res.sorumlu);
+          setYoneticiId(res.sorumlu);
+
+
          });
+         await findProjelerByPersonelId(temid).then((projelerRes)=>{
+          setProjeler(projelerRes);
+        });
+
+        await findGorevlerByPersonelId(temid).then((projelerRes)=>{
+          setGorevler(projelerRes);
+        });
         
         }
     };
@@ -90,10 +99,14 @@ const PersonelProvider = ({ children }) => {
   useEffect(()=>{
     const getPersonel = async () =>{
 
-        const tempId=parseInt(localStorage.getItem("user-id"));
-            await getPersoneller(tempId).then((res)=>{
+     //   const tempId=parseInt(localStorage.getItem("user-id"));
+     if(yoneticiId !== null){
+            await getPersoneller(yoneticiId).then((res)=>{
                 setPersoneller(res);
-  })};
+  })
+}
+
+};
    
   getPersonel();
 

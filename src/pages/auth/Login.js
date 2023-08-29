@@ -47,7 +47,7 @@ function Login() {
                 case 1: 
                   localStorage.setItem("role",1);
                   navigate("/",{replace:true}); 
-                  window.location.reload();   
+                  window.location.reload();    
                   break;
                 case 2:
                   localStorage.setItem("role",2);

@@ -26,6 +26,7 @@ export default function BasicCard(props) {
   const [projeGorev,setProjeGorev]=React.useState([]);
   const [proje,setProje]=React.useState();
   const [yorumlar,setYorumlar]=React.useState([]);
+  const [allImages,setAllImages]=React.useState([]);
 
   let projeId=gorev.proje;
 
@@ -58,29 +59,32 @@ export default function BasicCard(props) {
    getYorumlar();
 
    
-  },[]);
+  },[gorev]);
 
   console.log(proje);
   React.useEffect(()=>{
-    const personelImage = () =>{
-      personeller.map((personel)=>{
-        projeGorev.map((gorev)=>{
-          if(personel.id===gorev.sorumlu){
-            console.log(gorev.sorumlu);
-            setPersonelImage((current) => [...current,personel.image]);
-          }
-        })
-      })
-    }
-
-    personelImage();
+    const getUniquePersonelImages = () => {
+      const uniqueImages = new Set();
+      
+      projeGorev.forEach((gorev) => {
+        const personel = personeller.find((personel) => personel.id === gorev.sorumlu);
+        if (personel) {
+          uniqueImages.add(personel.image);
+          setAllImages((current)=>[...current,personel.image]);
+        }
+      });
+  
+      setPersonelImage([...uniqueImages]);
+    };
+  
+    getUniquePersonelImages();
 
   },[projeGorev])
 
 
 
 
-  console.log(proje);
+  console.log(allImages);
   return (
     <Card sx={{ maxWidth: 350 ,marginRight:10,maxHeight:520}}>
       <CardContent>
